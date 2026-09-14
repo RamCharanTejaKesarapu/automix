@@ -129,21 +129,24 @@ export class AutomationController {
           // Check for duplicate application
           if (applicationRepository.isDuplicate(job.url, job.company, job.title)) {
             console.log(`[AutomationController] Skipping duplicate: ${job.title} at ${job.company}`);
+            globalStateMachine.incrementStats('skipped', 1);
             continue;
           }
 
           // Evaluate match
           globalStateMachine.transitionTo('MATCH_VALIDATION', {
             company: job.company,
-            jobTitle: job.title
+            jobTitle: job.title,
+            currentAction: `Evaluating match for ${job.title}`
           });
 
           const match = await jobMatcher.evaluateJob(job, profile);
           if (!match.isMatch) {
+            globalStateMachine.incrementStats('skipped', 1);
             applicationRepository.logActivity({
               job_title: job.title,
               company: job.company,
-              action: `Skipped job: match score ${match.matchScore}% below threshold (${config.matchThreshold}%)`,
+              action: `Skipped: match score ${match.matchScore}% below threshold (${config.matchThreshold}%)`,
               result: match.reason,
               level: 'INFO'
             });
@@ -166,7 +169,7 @@ export class AutomationController {
           applicationRepository.logActivity({
             job_title: job.title,
             company: job.company,
-            action: `Matching job found! Score: ${match.matchScore}% (${match.matchedSkills.join(', ')})`,
+            action: `✓ Found matching job: ${job.title} (${match.matchScore}%)`,
             level: 'SUCCESS'
           });
 
@@ -230,16 +233,20 @@ export class AutomationController {
           }
 
           // Return to search / job listings page automatically
-          globalStateMachine.transitionTo('RETURN_TO_SEARCH');
+          globalStateMachine.transitionTo('RETURN_TO_SEARCH', { currentAction: 'Returning to job listings' });
           applicationRepository.logActivity({
-            action: 'Returning to job listings page',
-            level: 'INFO'
+            action: '✓ Returned to results',
+            level: 'SUCCESS'
           });
 
           await page.goto(searchPageUrl, { waitUntil: 'domcontentloaded', timeout: 25000 }).catch(() => {});
           await pageManager.waitQuiet(2000);
 
-          globalStateMachine.transitionTo('NEXT_JOB');
+          globalStateMachine.transitionTo('NEXT_JOB', { currentAction: 'Searching for next job' });
+          applicationRepository.logActivity({
+            action: '→ Searching for next job',
+            level: 'INFO'
+          });
           await page.waitForTimeout(1000);
         }
 

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { ActivityLog } from '../types';
-import { Terminal, Check, AlertCircle, Info, AlertTriangle, ArrowDown } from 'lucide-react';
+import { Terminal, ArrowDown } from 'lucide-react';
 
 interface ActivityLogTerminalProps {
   logs: ActivityLog[];
@@ -16,39 +16,60 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
     }
   }, [logs, autoScroll]);
 
-  const getLogIcon = (level: ActivityLog['level']) => {
-    switch (level) {
+  const renderLogPrefix = (log: ActivityLog) => {
+    const action = log.action.trim();
+    if (action.startsWith('✓')) {
+      return <span style={{ color: '#10b981', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✓</span>;
+    }
+    if (action.startsWith('→')) {
+      return <span style={{ color: '#06b6d4', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>→</span>;
+    }
+
+    switch (log.level) {
       case 'SUCCESS':
-        return <Check size={13} color="var(--accent-emerald)" style={{ flexShrink: 0, marginTop: '2px' }} />;
+        return <span style={{ color: '#10b981', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✓</span>;
       case 'WARN':
-        return <AlertTriangle size={13} color="var(--accent-amber)" style={{ flexShrink: 0, marginTop: '2px' }} />;
+        return <span style={{ color: '#fbbf24', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>⚠</span>;
       case 'ERROR':
-        return <AlertCircle size={13} color="var(--accent-rose)" style={{ flexShrink: 0, marginTop: '2px' }} />;
+        return <span style={{ color: '#fb7185', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✕</span>;
       default:
-        return <Info size={13} color="var(--accent-cyan)" style={{ flexShrink: 0, marginTop: '2px' }} />;
+        return <span style={{ color: '#06b6d4', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>→</span>;
     }
   };
 
-  const getLogColor = (level: ActivityLog['level']) => {
-    switch (level) {
-      case 'SUCCESS':
-        return '#34d399';
-      case 'WARN':
-        return '#fbbf24';
-      case 'ERROR':
-        return '#fb7185';
-      default:
-        return '#f1f5f9';
-    }
+  const getLogColor = (log: ActivityLog) => {
+    const action = log.action.trim();
+    if (action.startsWith('✓') || log.level === 'SUCCESS') return '#34d399';
+    if (log.level === 'WARN') return '#fbbf24';
+    if (log.level === 'ERROR') return '#fb7185';
+    if (action.startsWith('→')) return '#38bdf8';
+    return '#e2e8f0';
+  };
+
+  const cleanActionText = (action: string) => {
+    return action.replace(/^[✓→]\s*/, '');
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+    <div className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '12px 20px',
+        borderBottom: '1px solid var(--border-subtle)',
+        background: 'rgba(7, 10, 18, 0.7)'
+      }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Terminal size={16} color="var(--accent-cyan)" />
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Live Automation Event Stream
+          <Terminal size={15} color="var(--accent-cyan)" />
+          <span style={{
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            color: 'var(--text-main)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em'
+          }}>
+            LIVE ACTIVITY LOG
           </span>
         </div>
 
@@ -58,7 +79,7 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
             background: 'transparent',
             border: 'none',
             color: autoScroll ? 'var(--accent-cyan)' : 'var(--text-dim)',
-            fontSize: '0.75rem',
+            fontSize: '0.72rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -70,31 +91,62 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
         </button>
       </div>
 
-      <div ref={terminalRef} className="terminal-view">
+      <div
+        ref={terminalRef}
+        className="terminal-view"
+        style={{
+          maxHeight: '260px',
+          overflowY: 'auto',
+          padding: '14px 18px',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.82rem',
+          lineHeight: '1.6'
+        }}
+      >
         {logs.length === 0 ? (
-          <div style={{ color: 'var(--text-dim)', fontStyle: 'italic', padding: '10px 0' }}>
-            No activity logged yet. Start an automation run to view live events.
+          <div style={{ color: 'var(--text-dim)', fontStyle: 'italic', padding: '8px 0' }}>
+            No activity logged yet. Click START to begin automated discovery and application.
           </div>
         ) : (
           logs.map((log) => (
-            <div key={log.id} className="log-row">
-              <span className="log-timestamp">{log.timestamp}</span>
-              {getLogIcon(log.level)}
+            <div
+              key={log.id}
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                padding: '3px 0',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.02)'
+              }}
+            >
+              <span style={{
+                color: 'var(--text-dim)',
+                fontSize: '0.72rem',
+                minWidth: '70px',
+                flexShrink: 0,
+                marginTop: '1px'
+              }}>
+                {log.timestamp}
+              </span>
+
+              {renderLogPrefix(log)}
+
               <div style={{ flex: 1 }}>
                 {(log.job_title || log.company) && (
                   <span style={{ color: 'var(--accent-cyan)', marginRight: '6px', fontWeight: 600 }}>
                     [{log.company || 'Job'}]
                   </span>
                 )}
-                <span style={{ color: getLogColor(log.level) }}>{log.action}</span>
+                <span style={{ color: getLogColor(log) }}>
+                  {cleanActionText(log.action)}
+                </span>
                 {log.result && (
                   <span style={{ color: 'var(--accent-emerald)', marginLeft: '6px' }}>
-                    → {log.result}
+                    — {log.result}
                   </span>
                 )}
                 {log.error && (
                   <span style={{ color: 'var(--accent-rose)', marginLeft: '6px' }}>
-                    — Error: {log.error}
+                    (Error: {log.error})
                   </span>
                 )}
               </div>

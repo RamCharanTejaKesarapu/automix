@@ -42,17 +42,12 @@ export class ApplicationEngine {
    */
   public async execute(): Promise<boolean> {
     const job = this.job;
-    applicationRepository.logActivity({
-      job_title: job.title,
-      company: job.company,
-      action: 'Opened job application page',
-      level: 'INFO'
-    });
 
     globalStateMachine.transitionTo('OPENING_APPLICATION', {
       company: job.company,
       jobTitle: job.title,
       jobUrl: job.url,
+      currentAction: `Opening application for ${job.title}`,
       filledFields: 0,
       totalFields: 0
     });
@@ -63,6 +58,22 @@ export class ApplicationEngine {
       await this.pageManager.waitQuiet(2000);
     }
     await this.pageManager.dismissPopups();
+
+    applicationRepository.logActivity({
+      job_title: job.title,
+      company: job.company,
+      action: `✓ Opened application (${job.title} at ${job.company})`,
+      level: 'SUCCESS'
+    });
+
+    // Scroll to view form
+    await this.pageManager.scrollDown(350);
+    applicationRepository.logActivity({
+      job_title: job.title,
+      company: job.company,
+      action: '✓ Scrolled application',
+      level: 'INFO'
+    });
 
     // 2. Check for security challenge
     await this.handleSecurityVerificationIfNeeded();
@@ -89,10 +100,19 @@ export class ApplicationEngine {
           fields.length
         );
 
-        globalStateMachine.transitionTo('FILLING_FIELDS');
+        globalStateMachine.transitionTo('FILLING_FIELDS', {
+          currentAction: `Filling form step ${currentStep} (${fields.length} fields)`
+        });
 
         // Fill all detected fields on this step
         await this.fillFields(fields);
+
+        applicationRepository.logActivity({
+          job_title: job.title,
+          company: job.company,
+          action: `✓ Filled required fields (${Object.keys(this.filledFieldsMap).length} fields total)`,
+          level: 'SUCCESS'
+        });
       }
 
       // Check if there is a "Next" / "Continue" button for multi-step wizards
@@ -186,7 +206,7 @@ export class ApplicationEngine {
     }
 
     // 7. Submitting
-    globalStateMachine.transitionTo('SUBMITTING');
+    globalStateMachine.transitionTo('SUBMITTING', { currentAction: 'Submitting application form' });
     applicationRepository.logActivity({
       job_title: job.title,
       company: job.company,
@@ -197,11 +217,11 @@ export class ApplicationEngine {
     const submitted = await this.clickFinalSubmitButton();
     if (submitted) {
       await this.pageManager.waitQuiet(3000);
-      globalStateMachine.transitionTo('SUBMITTED');
+      globalStateMachine.transitionTo('SUBMITTED', { currentAction: 'Application submitted successfully' });
       applicationRepository.logActivity({
         job_title: job.title,
         company: job.company,
-        action: 'Successfully submitted application!',
+        action: '✓ Submitted application',
         result: 'Application confirmed',
         level: 'SUCCESS'
       });
@@ -315,10 +335,18 @@ export class ApplicationEngine {
             this.gptAnswersMap[fieldIdentifier] = userAnswer;
           } else {
             // AI generated answer with high confidence
-            globalStateMachine.transitionTo('FILLING_FIELDS');
+            globalStateMachine.transitionTo('FILLING_FIELDS', {
+              currentAction: `Answering "${(field.labelText || 'Question').substring(0, 35)}"`
+            });
             await this.pageManager.safeType(field.selector, gptResult.answer);
             this.filledFieldsMap[fieldIdentifier] = gptResult.answer;
             this.gptAnswersMap[fieldIdentifier] = gptResult.answer;
+            applicationRepository.logActivity({
+              job_title: this.job.title,
+              company: this.job.company,
+              action: `✓ Generated GPT response: "${(field.labelText || 'Question').substring(0, 45)}"`,
+              level: 'SUCCESS'
+            });
           }
           break;
 

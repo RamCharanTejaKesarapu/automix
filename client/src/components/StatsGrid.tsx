@@ -30,6 +30,13 @@ export const StatsGrid: React.FC<StatsGridProps> = ({ stats }) => {
       glowColor: 'rgba(16, 185, 129, 0.15)'
     },
     {
+      title: 'Skipped',
+      value: stats.skipped ?? 0,
+      icon: <XCircle size={18} color="var(--accent-purple, #a855f7)" />,
+      borderColor: 'rgba(168, 85, 247, 0.25)',
+      glowColor: 'rgba(168, 85, 247, 0.15)'
+    },
+    {
       title: 'Waiting for User',
       value: stats.waitingForUser,
       icon: <AlertTriangle size={18} color="var(--accent-amber)" />,
@@ -37,7 +44,7 @@ export const StatsGrid: React.FC<StatsGridProps> = ({ stats }) => {
       glowColor: 'rgba(245, 158, 11, 0.15)'
     },
     {
-      title: 'Failed / Skipped',
+      title: 'Failed',
       value: stats.failed,
       icon: <XCircle size={18} color="var(--accent-rose)" />,
       borderColor: 'rgba(244, 63, 94, 0.25)',

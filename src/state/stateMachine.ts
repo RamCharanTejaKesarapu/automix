@@ -28,6 +28,7 @@ export interface CurrentApplicationContext {
   totalFields: number;
   filledFields: number;
   currentFieldName?: string;
+  currentAction?: string;
   pendingQuestion?: string;
   pendingOptions?: string[];
   pendingMissingInfo?: string;
@@ -38,6 +39,7 @@ export interface AutomationStatistics {
   jobsFound: number;
   matchingJobs: number;
   applicationsSubmitted: number;
+  skipped: number;
   waitingForUser: number;
   failed: number;
 }
@@ -56,6 +58,7 @@ export class ApplicationStateMachine {
     jobsFound: 0,
     matchingJobs: 0,
     applicationsSubmitted: 0,
+    skipped: 0,
     waitingForUser: 0,
     failed: 0
   };
@@ -132,11 +135,28 @@ export class ApplicationStateMachine {
     this.notify();
   }
 
+  public setAction(action: string): void {
+    if (!this.context) {
+      this.context = {
+        company: '',
+        jobTitle: '',
+        jobUrl: '',
+        totalFields: 0,
+        filledFields: 0,
+        currentAction: action
+      };
+    } else {
+      this.context.currentAction = action;
+    }
+    this.notify();
+  }
+
   public resetStats(): void {
     this.stats = {
       jobsFound: 0,
       matchingJobs: 0,
       applicationsSubmitted: 0,
+      skipped: 0,
       waitingForUser: 0,
       failed: 0
     };

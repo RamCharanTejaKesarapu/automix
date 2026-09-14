@@ -28,6 +28,7 @@ export interface CurrentApplicationContext {
   totalFields: number;
   filledFields: number;
   currentFieldName?: string;
+  currentAction?: string;
   pendingQuestion?: string;
   pendingOptions?: string[];
   pendingMissingInfo?: string;
@@ -38,6 +39,7 @@ export interface AutomationStatistics {
   jobsFound: number;
   matchingJobs: number;
   applicationsSubmitted: number;
+  skipped: number;
   waitingForUser: number;
   failed: number;
 }

@@ -11,6 +11,7 @@ import {
 import { Header } from './components/Header';
 import { StateMachineVisualizer } from './components/StateMachineVisualizer';
 import { LiveMonitor } from './components/LiveMonitor';
+import { LiveStatusPanel } from './components/LiveStatusPanel';
 import { StatsGrid } from './components/StatsGrid';
 import { SessionConfigPanel, SessionConfig } from './components/SessionConfigPanel';
 import { CandidateProfileEditor } from './components/CandidateProfileEditor';
@@ -27,6 +28,7 @@ export const App: React.FC = () => {
     jobsFound: 0,
     matchingJobs: 0,
     applicationsSubmitted: 0,
+    skipped: 0,
     waitingForUser: 0,
     failed: 0
   });
@@ -262,6 +264,20 @@ export const App: React.FC = () => {
             state={appState}
             context={context}
             screenshotBase64={screenshotBase64}
+          />
+
+          {/* LIVE STATUS & CONTROLS Card */}
+          <LiveStatusPanel
+            state={appState}
+            context={context}
+            stats={stats}
+            config={sessionConfig}
+            isRunning={isRunning}
+            isPaused={isPaused}
+            onStart={handleStart}
+            onPause={handlePause}
+            onResume={handleResume}
+            onStop={handleStop}
           />
 
           {/* Real-time statistics counters */}
