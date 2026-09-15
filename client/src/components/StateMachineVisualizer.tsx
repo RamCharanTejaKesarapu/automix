@@ -33,8 +33,8 @@ export const StateMachineVisualizer: React.FC<StateMachineVisualizerProps> = ({ 
             State Machine Execution Pipeline
           </span>
         </div>
-        <div style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>
-          Active: <strong style={{ color: '#fff' }}>{currentState}</strong>
+        <div style={{ fontSize: '0.75rem', color: '#e4e4e7' }}>
+          Active: <strong style={{ color: '#ffffff' }}>{currentState}</strong>
         </div>
       </div>
 
@@ -55,19 +55,9 @@ export const StateMachineVisualizer: React.FC<StateMachineVisualizerProps> = ({ 
           let color = 'var(--text-dim)';
 
           if (isActive) {
-            if (step.id === 'WAITING_FOR_USER') {
-              bg = 'rgba(245, 158, 11, 0.25)';
-              border = 'rgba(245, 158, 11, 0.7)';
-              color = '#fbbf24';
-            } else if (step.id === 'SUBMITTED') {
-              bg = 'rgba(16, 185, 129, 0.25)';
-              border = 'rgba(16, 185, 129, 0.7)';
-              color = '#34d399';
-            } else {
-              bg = 'rgba(6, 182, 212, 0.2)';
-              border = 'rgba(6, 182, 212, 0.6)';
-              color = '#22d3ee';
-            }
+            bg = 'rgba(255, 255, 255, 0.12)';
+            border = 'rgba(255, 255, 255, 0.35)';
+            color = '#ffffff';
           } else if (isPassed) {
             bg = 'rgba(255, 255, 255, 0.06)';
             border = 'rgba(255, 255, 255, 0.12)';
@@ -89,7 +79,7 @@ export const StateMachineVisualizer: React.FC<StateMachineVisualizerProps> = ({ 
                   fontSize: '0.75rem',
                   fontWeight: isActive ? 700 : 500,
                   whiteSpace: 'nowrap',
-                  boxShadow: isActive ? '0 0 16px rgba(6, 182, 212, 0.3)' : 'none',
+                  boxShadow: isActive ? '0 0 16px rgba(255, 255, 255, 0.12)' : 'none',
                   transition: 'all 0.25s ease'
                 }}
               >
@@ -99,11 +89,11 @@ export const StateMachineVisualizer: React.FC<StateMachineVisualizerProps> = ({ 
                     width: '7px',
                     height: '7px',
                     borderRadius: '50%',
-                    background: step.id === 'WAITING_FOR_USER' ? 'var(--accent-amber)' : 'var(--accent-cyan)',
-                    boxShadow: '0 0 8px currentColor'
+                    background: '#ffffff',
+                    boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)'
                   }} />
                 )}
-                {isPassed && <CheckCircle size={12} color="var(--accent-emerald)" />}
+                {isPassed && <CheckCircle size={12} color="#d4d4d8" />}
                 {!isActive && !isPassed && <Clock size={11} color="var(--text-dim)" />}
                 <span>{step.label}</span>
               </div>
