@@ -11,28 +11,73 @@ export interface DiscoveredJob {
   fullDescription?: string;
 }
 
+export interface JobMatcherOptions {
+  targetRole: string;
+  targetField: string;
+  targetLocation?: string;
+  threshold?: number;
+  excludeKeywords?: string[];
+}
+
 export class JobMatcher {
   private targetRole: string;
   private targetField: string;
   private targetLocation?: string;
   private threshold: number;
+  private excludeKeywords: string[];
 
-  constructor(options: {
-    targetRole: string;
-    targetField: string;
-    targetLocation?: string;
-    threshold?: number;
-  }) {
+  constructor(options: JobMatcherOptions) {
     this.targetRole = options.targetRole;
     this.targetField = options.targetField;
     this.targetLocation = options.targetLocation;
     this.threshold = options.threshold ?? 65;
+    this.excludeKeywords = options.excludeKeywords ?? [
+      'senior',
+      'lead',
+      'staff',
+      'principal',
+      'director',
+      'vp',
+      'head of'
+    ];
+  }
+
+  /**
+   * Fast pre-check: determine if the job is an obvious mismatch before expensive LLM analysis
+   */
+  public isQuickMismatch(jobTitle: string): { mismatch: boolean; reason?: string } {
+    const titleLower = jobTitle.toLowerCase();
+    const targetLower = this.targetRole.toLowerCase();
+
+    // If searching for intern/entry level, filter out senior/staff roles
+    const isSearchingEntryLevel = targetLower.includes('intern') || targetLower.includes('entry') || targetLower.includes('junior');
+    if (isSearchingEntryLevel) {
+      for (const excluded of this.excludeKeywords) {
+        // Only exclude if target role didn't explicitly include it
+        if (!targetLower.includes(excluded) && new RegExp(`\\b${excluded}\\b`, 'i').test(titleLower)) {
+          return { mismatch: true, reason: `Excluded seniority level: "${excluded}"` };
+        }
+      }
+    }
+
+    return { mismatch: false };
   }
 
   public async evaluateJob(
     job: DiscoveredJob,
     profile: CandidateProfile
   ): Promise<JobAnalysisResult> {
+    const preCheck = this.isQuickMismatch(job.title);
+    if (preCheck.mismatch) {
+      return {
+        matchScore: 25,
+        isMatch: false,
+        matchedSkills: [],
+        missingSkills: [],
+        reason: preCheck.reason || 'Title does not meet seniority criteria.',
+      };
+    }
+
     const description = job.fullDescription || job.snippet || `${job.title} at ${job.company}`;
     
     return await analyzeJob({
