@@ -109,8 +109,9 @@ export const ApplicationsTable: React.FC<ApplicationsTableProps> = ({ applicatio
                         borderRadius: '6px',
                         fontSize: '0.78rem',
                         fontWeight: 700,
-                        background: app.match_score >= 80 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(6, 182, 212, 0.15)',
-                        color: app.match_score >= 80 ? '#34d399' : '#22d3ee'
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        color: '#ffffff',
+                        border: '1px solid rgba(255, 255, 255, 0.2)'
                       }}>
                         {app.match_score}%
                       </span>
@@ -182,15 +183,15 @@ export const ApplicationsTable: React.FC<ApplicationsTableProps> = ({ applicatio
 
             <div style={{ padding: '22px', overflowY: 'auto', flex: 1 }}>
               {selectedApp.match_reason && (
-                <div style={{ marginBottom: '20px', padding: '12px 16px', background: 'rgba(6, 182, 212, 0.08)', borderRadius: '8px', border: '1px solid rgba(6, 182, 212, 0.25)', fontSize: '0.85rem' }}>
-                  <strong style={{ color: 'var(--accent-cyan)' }}>Match Evaluation: </strong>
+                <div style={{ marginBottom: '20px', padding: '12px 16px', background: 'rgba(255, 255, 255, 0.04)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.15)', fontSize: '0.85rem' }}>
+                  <strong style={{ color: '#ffffff' }}>Match Evaluation: </strong>
                   {selectedApp.match_reason}
                 </div>
               )}
 
               {selectedApp.gpt_answers && Object.keys(selectedApp.gpt_answers).length > 0 && (
                 <div style={{ marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '10px' }}>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>
                     AI Contextual Answers Generated:
                   </h4>
                   {Object.entries(selectedApp.gpt_answers).map(([q, a], i) => (
@@ -204,7 +205,7 @@ export const ApplicationsTable: React.FC<ApplicationsTableProps> = ({ applicatio
 
               {selectedApp.fields_filled && Object.keys(selectedApp.fields_filled).length > 0 && (
                 <div>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-indigo)', marginBottom: '10px' }}>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#d4d4d8', marginBottom: '10px' }}>
                     Fields Filled:
                   </h4>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
@@ -219,7 +220,7 @@ export const ApplicationsTable: React.FC<ApplicationsTableProps> = ({ applicatio
               )}
 
               {selectedApp.error_message && (
-                <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(244, 63, 94, 0.1)', borderRadius: '8px', border: '1px solid rgba(244, 63, 94, 0.3)', color: 'var(--accent-rose)', fontSize: '0.85rem' }}>
+                <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(255, 255, 255, 0.04)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.18)', color: '#e4e4e7', fontSize: '0.85rem' }}>
                   <strong>Error Log: </strong>{selectedApp.error_message}
                 </div>
               )}
