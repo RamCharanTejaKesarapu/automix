@@ -5,6 +5,7 @@ export type PrivacyLevel = 'MINIMAL' | 'STANDARD' | 'STRICT';
 export interface PrivacyConfig {
   level: PrivacyLevel;
   maskSSN: boolean;
+  maskNationalId: boolean;
   maskPhone: boolean;
   maskEmail: boolean;
   maskStreetAddress: boolean;
@@ -14,6 +15,7 @@ export interface PrivacyConfig {
 export const defaultPrivacyConfig: PrivacyConfig = {
   level: 'STANDARD',
   maskSSN: true,
+  maskNationalId: true,
   maskPhone: false,
   maskEmail: false,
   maskStreetAddress: true,
@@ -39,6 +41,7 @@ export class PrivacyLayer {
    * Sanitizes arbitrary text before sending to LLM
    */
   public sanitizeText(text: string): string {
+    if (!text) return '';
     let sanitized = text;
 
     // Mask SSN: 3 digits - 2 digits - 4 digits
@@ -46,17 +49,23 @@ export class PrivacyLayer {
       sanitized = sanitized.replace(/\b\d{3}-\d{2}-\d{4}\b/g, '[REDACTED_SSN]');
     }
 
-    // Mask credit cards / bank accounts (12 to 19 digits)
+    // Mask National IDs: Indian Aadhaar (12 digits with spaces) and UK National Insurance numbers
+    if (this.config.maskNationalId) {
+      sanitized = sanitized.replace(/\b\d{4}\s\d{4}\s\d{4}\b/g, '[REDACTED_NATIONAL_ID]');
+      sanitized = sanitized.replace(/\b[A-Za-z]{2}\s?[0-9]{6}\s?[A-Da-d]{1}\b/g, '[REDACTED_NIN]');
+    }
+
+    // Mask credit cards / bank accounts (13 to 19 digits)
     if (this.config.maskFinancial) {
       sanitized = sanitized.replace(/\b(?:\d[ -]*?){13,16}\b/g, '[REDACTED_ACCOUNT]');
     }
 
-    // Mask phone numbers if strict
+    // Mask phone numbers if strict or explicitly configured
     if (this.config.maskPhone || this.config.level === 'STRICT') {
       sanitized = sanitized.replace(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g, '[PHONE]');
     }
 
-    // Mask email if strict
+    // Mask email if strict or explicitly configured
     if (this.config.maskEmail || this.config.level === 'STRICT') {
       sanitized = sanitized.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]');
     }
