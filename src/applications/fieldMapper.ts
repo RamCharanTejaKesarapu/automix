@@ -106,6 +106,15 @@ export class FieldMapper {
       case 'gpa':
         return { field, strategy: 'DIRECT_PROFILE_VALUE', value: profile.education[0]?.gpa || '3.85' };
 
+      case 'salary_expectation':
+        return { field, strategy: 'DIRECT_PROFILE_VALUE', value: 'Competitive / Market Rate' };
+
+      case 'notice_period':
+        return { field, strategy: 'DIRECT_PROFILE_VALUE', value: 'Immediately / 2 Weeks' };
+
+      case 'hear_about_us':
+        return { field, strategy: 'DIRECT_PROFILE_VALUE', value: 'Company Careers Page / Online Job Board' };
+
       case 'resume_upload':
         return {
           field,

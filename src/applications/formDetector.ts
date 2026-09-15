@@ -24,6 +24,9 @@ export type DetectedFieldType =
   | 'education_school'
   | 'graduation_year'
   | 'gpa'
+  | 'salary_expectation'
+  | 'notice_period'
+  | 'hear_about_us'
   | 'select_dropdown'
   | 'radio_group'
   | 'checkbox_consent'
@@ -287,7 +290,18 @@ export class FormDetector {
       return 'education_degree';
     }
 
-    // 9. Open-Ended and Motivational Questions (Textarea or long question)
+    // 9. Practical ATS Form Questions
+    if (/\b(salary|compensation|desired pay|expected salary|rate)\b/i.test(combinedSignals)) {
+      return 'salary_expectation';
+    }
+    if (/\b(notice period|start date|availability|available to start|when can you start)\b/i.test(combinedSignals)) {
+      return 'notice_period';
+    }
+    if (/\b(how did you hear|how did you find|referral source|source)\b/i.test(combinedSignals)) {
+      return 'hear_about_us';
+    }
+
+    // 10. Open-Ended and Motivational Questions (Textarea or long question)
     const isOpenEndedPrompt =
       /\b(why should we hire you|why are you a good fit|why do you want|tell us about yourself|describe.*experience|tell me about|what makes you|why.*company|additional information|cover letter)\b/i.test(combinedSignals);
 
@@ -298,12 +312,12 @@ export class FormDetector {
       return 'open_ended_question';
     }
 
-    // 10. Select dropdown
+    // 11. Select dropdown
     if (raw.tagName === 'select') {
       return 'select_dropdown';
     }
 
-    // 11. Radio / Checkbox
+    // 12. Radio / Checkbox
     if (raw.inputType === 'radio') {
       return 'radio_group';
     }
