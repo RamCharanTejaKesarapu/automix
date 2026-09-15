@@ -98,7 +98,8 @@ export const App: React.FC = () => {
                 confetti({
                   particleCount: 80,
                   spread: 60,
-                  origin: { y: 0.6 }
+                  origin: { y: 0.6 },
+                  colors: ['#ffffff', '#e4e4e7', '#d4d4d8', '#a1a1aa', '#71717a']
                 });
                 fetchApplications();
               }
