@@ -205,13 +205,15 @@ npm run build
 npm start
 ```
 
-### Automated Testing
+### Automated Testing & CI
 
-Run the automated unit test suite verifying job pre-filtering, seniority exclusion, and field mapping:
+AutoMix includes a comprehensive automated test suite verifying job pre-filtering, seniority exclusions, ATS field mapping, state machine transitions, and PII redaction:
 
 ```bash
 npm test
 ```
+
+All pull requests and commits are automatically validated via GitHub Actions CI (`.github/workflows/ci.yml`) and CodeQL static security analysis (`.github/workflows/codeql.yml`).
 
 ---
 
@@ -219,21 +221,32 @@ npm test
 
 ```
 automix/
+├── .github/                          # GitHub Actions Workflows & Templates
+│   ├── workflows/                    # CI/CD pipelines
+│   │   ├── ci.yml                    # Automated build & test pipeline
+│   │   └── codeql.yml                # CodeQL static security analysis
+│   ├── ISSUE_TEMPLATE/               # Structured GitHub Issue Forms
+│   │   ├── bug_report.yml            # Bug reporting form
+│   │   ├── feature_request.yml       # Feature proposal form
+│   │   ├── security_report.yml       # Security vulnerability form
+│   │   └── config.yml                # Issue configuration
+│   └── pull_request_template.md      # Pull Request review template
 ├── client/                           # React + Vite Frontend Dashboard
 │   ├── public/                       # Favicon and SVGs
 │   ├── src/
 │   │   ├── components/               # UI components
 │   │   │   ├── ActivityLogTerminal.tsx   # Live console log stream
 │   │   │   ├── CandidateProfileEditor.tsx# Profile & skills editor
-│   │   │   ├── Header.tsx                # App header & connectivity status
+│   │   │   ├── ErrorBoundary.tsx         # Obsidian Black & Grey React error boundary
+│   │   │   ├── Header.tsx                # App header & connectivity telemetry
 │   │   │   ├── HumanInTheLoopModal.tsx   # HITL prompt modal (CAPTCHA, questions)
 │   │   │   ├── LiveMonitor.tsx           # Browser viewport screencast
 │   │   │   ├── LiveStatusPanel.tsx       # Live status, target job & quick controls
 │   │   │   ├── SessionConfigPanel.tsx    # Portal URL, threshold & keywords
 │   │   │   ├── StateMachineVisualizer.tsx# Visual FSM step tracker
 │   │   │   └── StatsGrid.tsx             # Real-time metrics counters
-│   │   ├── App.tsx                   # Main layout and WebSocket handler
-│   │   ├── index.css                 # Glassmorphic dark design system
+│   │   ├── App.tsx                   # Main layout and WebSocket handler with backoff
+│   │   ├── index.css                 # Obsidian Black & Grey design system
 │   │   └── types.ts                  # Shared client TypeScript types
 │   ├── index.html
 │   ├── package.json
@@ -241,7 +254,7 @@ automix/
 ├── src/                              # Backend Core
 │   ├── ai/                           # LLM reasoning & PII sanitizer
 │   │   ├── openai/                   # OpenAI/Gemini client & question-answer logic
-│   │   └── privacyLayer.ts           # PII redaction layer
+│   │   └── privacyLayer.ts           # PII redaction layer (SSN, Aadhaar, NIN, Accounts)
 │   ├── applications/                 # Form automation engine
 │   │   ├── applicationEngine.ts      # Multi-step form navigator & submission
 │   │   ├── fieldMapper.ts            # Profile-to-form field mapping
@@ -264,9 +277,17 @@ automix/
 │   ├── profile/                      # Candidate data model
 │   │   └── candidateProfile.ts       # Profile repository & default seed data
 │   ├── server/                       # Express server
-│   │   └── index.ts                  # API routes & WebSocket broadcaster
+│   │   ├── index.ts                  # API routes, WS keepalive & Multer boundaries
+│   │   └── validation.ts             # Zod runtime validation schemas
 │   └── state/                        # State machine implementation
 │       └── stateMachine.ts           # FSM state definitions & transitions
+├── tests/                            # Automated Unit Tests (Node native tsx runner)
+│   ├── matcher.test.ts               # Keyword pre-filtering & seniority exclusion
+│   ├── fieldMapper.test.ts           # Identity mapping & learned memory bank
+│   ├── stateMachine.test.ts          # FSM lifecycle, stats & HITL transitions
+│   └── privacyLayer.test.ts          # Multi-jurisdiction PII redaction
+├── CONTRIBUTING.md                   # Contribution guidelines & branch conventions
+├── SECURITY.md                       # Security advisory & vulnerability policy
 ├── data/                             # SQLite database directory (gitignored)
 ├── uploads/                          # Resume PDF storage (gitignored)
 ├── package.json
