@@ -11,44 +11,44 @@ export const StatsGrid: React.FC<StatsGridProps> = ({ stats }) => {
     {
       title: 'Jobs Found',
       value: stats.jobsFound,
-      icon: <Search size={18} color="var(--accent-cyan)" />,
-      borderColor: 'rgba(6, 182, 212, 0.25)',
-      glowColor: 'rgba(6, 182, 212, 0.15)'
+      icon: <Search size={18} color="#f4f4f5" />,
+      borderColor: 'rgba(255, 255, 255, 0.12)',
+      glowColor: 'rgba(255, 255, 255, 0.05)'
     },
     {
       title: 'Matching Jobs',
       value: stats.matchingJobs,
-      icon: <CheckCircle2 size={18} color="var(--accent-blue)" />,
-      borderColor: 'rgba(59, 130, 246, 0.25)',
-      glowColor: 'rgba(59, 130, 246, 0.15)'
+      icon: <CheckCircle2 size={18} color="#e4e4e7" />,
+      borderColor: 'rgba(255, 255, 255, 0.12)',
+      glowColor: 'rgba(255, 255, 255, 0.05)'
     },
     {
       title: 'Applications Submitted',
       value: stats.applicationsSubmitted,
-      icon: <Send size={18} color="var(--accent-emerald)" />,
-      borderColor: 'rgba(16, 185, 129, 0.25)',
-      glowColor: 'rgba(16, 185, 129, 0.15)'
+      icon: <Send size={18} color="#ffffff" />,
+      borderColor: 'rgba(255, 255, 255, 0.18)',
+      glowColor: 'rgba(255, 255, 255, 0.08)'
     },
     {
       title: 'Skipped',
       value: stats.skipped ?? 0,
-      icon: <XCircle size={18} color="var(--accent-purple, #a855f7)" />,
-      borderColor: 'rgba(168, 85, 247, 0.25)',
-      glowColor: 'rgba(168, 85, 247, 0.15)'
+      icon: <XCircle size={18} color="#a1a1aa" />,
+      borderColor: 'rgba(255, 255, 255, 0.08)',
+      glowColor: 'rgba(255, 255, 255, 0.03)'
     },
     {
       title: 'Waiting for User',
       value: stats.waitingForUser,
-      icon: <AlertTriangle size={18} color="var(--accent-amber)" />,
-      borderColor: stats.waitingForUser > 0 ? 'rgba(245, 158, 11, 0.6)' : 'rgba(245, 158, 11, 0.25)',
-      glowColor: 'rgba(245, 158, 11, 0.15)'
+      icon: <AlertTriangle size={18} color="#d4d4d8" />,
+      borderColor: stats.waitingForUser > 0 ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.08)',
+      glowColor: stats.waitingForUser > 0 ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.03)'
     },
     {
       title: 'Failed',
       value: stats.failed,
-      icon: <XCircle size={18} color="var(--accent-rose)" />,
-      borderColor: 'rgba(244, 63, 94, 0.25)',
-      glowColor: 'rgba(244, 63, 94, 0.15)'
+      icon: <XCircle size={18} color="#71717a" />,
+      borderColor: 'rgba(255, 255, 255, 0.08)',
+      glowColor: 'rgba(255, 255, 255, 0.03)'
     }
   ];
 
@@ -66,7 +66,7 @@ export const StatsGrid: React.FC<StatsGridProps> = ({ stats }) => {
           style={{
             padding: '16px 20px',
             borderColor: card.borderColor,
-            background: `radial-gradient(circle at top right, ${card.glowColor} 0%, rgba(14, 21, 37, 0.9) 65%)`
+            background: `radial-gradient(circle at top right, ${card.glowColor} 0%, rgba(18, 18, 21, 0.95) 70%)`
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
