@@ -58,6 +58,12 @@ export class BrowserManager {
       });
     }
 
+    // Register disconnection lifecycle hook
+    this.browser.on('disconnected', () => {
+      console.warn('[BrowserManager] Browser disconnected. Cleaning up internal handles.');
+      this.cleanupInternalState();
+    });
+
     this.context = await this.browser.newContext({
       viewport: { width: 1366, height: 800 },
       userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
@@ -68,7 +74,29 @@ export class BrowserManager {
 
     // Anti-bot stealth + Visual Cursor & Action Badge overlay injection
     await this.context.addInitScript(() => {
+      // 1. Conceal Playwright Automation Flags
       Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+
+      // 2. Mock Desktop Chrome Runtime
+      (window as any).chrome = {
+        app: { isInstalled: false },
+        runtime: {},
+        loadTimes: () => ({}),
+        csi: () => ({})
+      };
+
+      // 3. Mock Standard Desktop Plugins
+      Object.defineProperty(navigator, 'plugins', {
+        get: () => [
+          { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer', description: 'Portable Document Format' },
+          { name: 'Chrome PDF Viewer', filename: 'mhjfbmdgcfjbbpaeojofohoefgiehjai', description: '' }
+        ]
+      });
+
+      // 4. Mock Consistent Locale Languages
+      Object.defineProperty(navigator, 'languages', {
+        get: () => ['en-US', 'en']
+      });
 
       // Visual Cursor and Live Action Badge
       function initVisualOverlays() {
@@ -236,9 +264,6 @@ export class BrowserManager {
       console.warn(`[BrowserManager] CDP screencast fallback to interval: ${err.message}`);
       this.startIntervalFallback();
     }
-
-    // Safety fallback in case CDP session resets during navigation
-    this.startIntervalFallback();
   }
 
   private startIntervalFallback() {
@@ -254,6 +279,17 @@ export class BrowserManager {
         } catch {}
       }
     }, 800);
+  }
+
+  private cleanupInternalState(): void {
+    if (this.screencastInterval) {
+      clearInterval(this.screencastInterval);
+      this.screencastInterval = null;
+    }
+    this.cdpSession = null;
+    this.activePage = null;
+    this.context = null;
+    this.browser = null;
   }
 
   public async close(): Promise<void> {
@@ -277,6 +313,7 @@ export class BrowserManager {
       await this.browser.close().catch(() => {});
       this.browser = null;
     }
+    this.cleanupInternalState();
   }
 }
 
