@@ -27,14 +27,14 @@ export const SessionConfigPanel: React.FC<SessionConfigPanelProps> = ({ config, 
           <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff' }}>Target Job & Search Parameters</h2>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Configure real website target, role constraints, and automation behaviors</p>
         </div>
-        <span className="badge badge-indigo" style={{ fontSize: '0.7rem' }}>TARGET CRITERIA</span>
+        <span className="badge badge-grey" style={{ fontSize: '0.7rem' }}>TARGET CRITERIA</span>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '18px' }}>
         {/* Website URL */}
         <div style={{ gridColumn: '1 / -1' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '6px' }}>
-            <Globe size={14} color="var(--accent-cyan)" />
+            <Globe size={14} color="#e4e4e7" />
             <span>WEBSITE URL (Real Job Board / Company Portal)</span>
           </label>
           <input
@@ -140,10 +140,10 @@ export const SessionConfigPanel: React.FC<SessionConfigPanelProps> = ({ config, 
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-              <Sliders size={14} color="var(--accent-cyan)" />
+              <Sliders size={14} color="#e4e4e7" />
               <span>MIN MATCH SCORE:</span>
             </label>
-            <strong style={{ fontSize: '0.85rem', color: 'var(--accent-cyan)' }}>{config.matchThreshold}%</strong>
+            <strong style={{ fontSize: '0.85rem', color: '#ffffff' }}>{config.matchThreshold}%</strong>
           </div>
           <input
             id="match-threshold-slider"
@@ -153,7 +153,7 @@ export const SessionConfigPanel: React.FC<SessionConfigPanelProps> = ({ config, 
             step={5}
             value={config.matchThreshold}
             onChange={(e) => onChange({ matchThreshold: parseInt(e.target.value, 10) })}
-            style={{ width: '100%', accentColor: 'var(--accent-cyan)', cursor: 'pointer' }}
+            style={{ width: '100%', accentColor: '#ffffff', cursor: 'pointer' }}
             disabled={disabled}
           />
         </div>
@@ -168,11 +168,11 @@ export const SessionConfigPanel: React.FC<SessionConfigPanelProps> = ({ config, 
             type="checkbox"
             checked={config.autoSubmit}
             onChange={(e) => onChange({ autoSubmit: e.target.checked })}
-            style={{ width: '18px', height: '18px', accentColor: 'var(--accent-emerald)' }}
+            style={{ width: '18px', height: '18px', accentColor: '#ffffff' }}
             disabled={disabled}
           />
           <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ShieldCheck size={16} color={config.autoSubmit ? 'var(--accent-emerald)' : 'var(--accent-amber)'} />
+            <ShieldCheck size={16} color={config.autoSubmit ? '#ffffff' : '#a1a1aa'} />
             <strong>Automatic Submission:</strong> {config.autoSubmit ? 'ON (Auto-Submit)' : 'OFF (Requires My Confirmation)'}
           </span>
         </label>
@@ -184,11 +184,11 @@ export const SessionConfigPanel: React.FC<SessionConfigPanelProps> = ({ config, 
             type="checkbox"
             checked={!config.headless}
             onChange={(e) => onChange({ headless: !e.target.checked })}
-            style={{ width: '18px', height: '18px', accentColor: 'var(--accent-cyan)' }}
+            style={{ width: '18px', height: '18px', accentColor: '#ffffff' }}
             disabled={disabled}
           />
           <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Monitor size={16} color="var(--accent-cyan)" />
+            <Monitor size={16} color="#e4e4e7" />
             <strong>Visible Browser Window:</strong> {!config.headless ? 'Visible (Headful)' : 'Headless (Live Stream Only)'}
           </span>
         </label>
