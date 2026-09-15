@@ -32,8 +32,8 @@ export const HumanInTheLoopModal: React.FC<HumanInTheLoopModalProps> = ({ prompt
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(4, 7, 18, 0.85)',
-      backdropFilter: 'blur(10px)',
+      background: 'rgba(0, 0, 0, 0.88)',
+      backdropFilter: 'blur(12px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -45,36 +45,26 @@ export const HumanInTheLoopModal: React.FC<HumanInTheLoopModalProps> = ({ prompt
         style={{
           width: '100%',
           maxWidth: '560px',
-          border: isCaptcha
-            ? '2px solid rgba(245, 158, 11, 0.8)'
-            : isSubmission
-            ? '2px solid rgba(16, 185, 129, 0.8)'
-            : '2px solid rgba(6, 182, 212, 0.8)',
-          boxShadow: isCaptcha
-            ? '0 0 35px rgba(245, 158, 11, 0.4)'
-            : '0 0 35px rgba(6, 182, 212, 0.4)',
+          border: '1px solid rgba(255, 255, 255, 0.22)',
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 255, 255, 0.06)',
           overflow: 'hidden'
         }}
       >
         {/* Header */}
         <div style={{
           padding: '16px 22px',
-          background: isCaptcha
-            ? 'rgba(245, 158, 11, 0.15)'
-            : isSubmission
-            ? 'rgba(16, 185, 129, 0.15)'
-            : 'rgba(6, 182, 212, 0.15)',
+          background: 'rgba(255, 255, 255, 0.05)',
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
           borderBottom: '1px solid var(--border-subtle)'
         }}>
           {isCaptcha ? (
-            <ShieldAlert size={24} color="var(--accent-amber)" />
+            <ShieldAlert size={24} color="#ffffff" />
           ) : isSubmission ? (
-            <CheckCircle2 size={24} color="var(--accent-emerald)" />
+            <CheckCircle2 size={24} color="#ffffff" />
           ) : (
-            <AlertTriangle size={24} color="var(--accent-cyan)" />
+            <AlertTriangle size={24} color="#e4e4e7" />
           )}
           <div>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{prompt.title}</h3>
@@ -91,7 +81,7 @@ export const HumanInTheLoopModal: React.FC<HumanInTheLoopModalProps> = ({ prompt
           </p>
 
           {isCaptcha ? (
-            <div style={{ marginBottom: '20px', padding: '14px', background: 'rgba(245, 158, 11, 0.08)', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.25)', fontSize: '0.85rem', color: 'var(--text-main)' }}>
+            <div style={{ marginBottom: '20px', padding: '14px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.16)', fontSize: '0.85rem', color: 'var(--text-main)' }}>
               A security verification (e.g. Cloudflare Turnstile or CAPTCHA) has been triggered. If running headful, complete the challenge in the open browser window, then click <strong>Continue</strong> below.
             </div>
           ) : null}
@@ -109,8 +99,8 @@ export const HumanInTheLoopModal: React.FC<HumanInTheLoopModalProps> = ({ prompt
                     textAlign: 'left',
                     padding: '10px 14px',
                     borderRadius: '8px',
-                    background: answer === opt ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                    border: answer === opt ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+                    background: answer === opt ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+                    border: answer === opt ? '1px solid #ffffff' : '1px solid var(--border-subtle)',
                     color: answer === opt ? '#ffffff' : 'var(--text-muted)',
                     cursor: 'pointer',
                     fontSize: '0.875rem',
@@ -148,10 +138,10 @@ export const HumanInTheLoopModal: React.FC<HumanInTheLoopModalProps> = ({ prompt
                 type="checkbox"
                 checked={savePermanently}
                 onChange={(e) => setSavePermanently(e.target.checked)}
-                style={{ accentColor: 'var(--accent-cyan)', width: '16px', height: '16px' }}
+                style={{ accentColor: '#ffffff', width: '16px', height: '16px' }}
               />
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <BookmarkPlus size={14} color="var(--accent-cyan)" />
+                <BookmarkPlus size={14} color="#e4e4e7" />
                 Save this answer permanently to my profile (never ask again)
               </span>
             </label>
