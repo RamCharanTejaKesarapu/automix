@@ -112,7 +112,7 @@ export const CandidateProfileEditor: React.FC<CandidateProfileEditorProps> = ({ 
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Primary source of truth for all automated form responses</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {statusMsg && <span style={{ fontSize: '0.85rem', color: 'var(--accent-emerald)', fontWeight: 600 }}>{statusMsg}</span>}
+          {statusMsg && <span style={{ fontSize: '0.85rem', color: '#ffffff', fontWeight: 600 }}>{statusMsg}</span>}
           <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
             <Save size={16} />
             {saving ? 'Saving...' : 'Save Profile Changes'}
@@ -237,7 +237,7 @@ export const CandidateProfileEditor: React.FC<CandidateProfileEditorProps> = ({ 
       {/* Tab: Experience */}
       {activeTab === 'experience' && (
         <div>
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '10px' }}>Work Experience</h3>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', marginBottom: '10px' }}>Work Experience</h3>
           {profile.workExperience.map((exp: any, i: number) => (
             <div key={i} style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-subtle)', marginBottom: '14px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '10px' }}>
@@ -277,7 +277,7 @@ export const CandidateProfileEditor: React.FC<CandidateProfileEditorProps> = ({ 
             </div>
           ))}
 
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-indigo)', margin: '20px 0 10px' }}>Internships</h3>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#d4d4d8', margin: '20px 0 10px' }}>Internships</h3>
           {profile.internships.map((intern: any, i: number) => (
             <div key={i} style={{ padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-subtle)', marginBottom: '14px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '10px' }}>
@@ -315,7 +315,7 @@ export const CandidateProfileEditor: React.FC<CandidateProfileEditorProps> = ({ 
       {activeTab === 'skills' && (
         <div>
           <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>
               TECHNICAL SKILLS (Comma Separated)
             </label>
             <textarea
@@ -329,7 +329,7 @@ export const CandidateProfileEditor: React.FC<CandidateProfileEditorProps> = ({ 
             />
           </div>
 
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-indigo)', marginBottom: '8px' }}>
+          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#d4d4d8', marginBottom: '8px' }}>
             KEY PROJECTS
           </label>
           {profile.projects.map((proj: any, i: number) => (
@@ -369,8 +369,8 @@ export const CandidateProfileEditor: React.FC<CandidateProfileEditorProps> = ({ 
       {activeTab === 'documents' && (
         <div>
           {/* File upload widget */}
-          <div style={{ padding: '20px', background: 'rgba(6, 182, 212, 0.05)', borderRadius: '12px', border: '1px dashed rgba(6, 182, 212, 0.4)', marginBottom: '20px', textAlign: 'center' }}>
-            <Upload size={32} color="var(--accent-cyan)" style={{ margin: '0 auto 10px' }} />
+          <div style={{ padding: '20px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', border: '1px dashed rgba(255, 255, 255, 0.25)', marginBottom: '20px', textAlign: 'center' }}>
+            <Upload size={32} color="#e4e4e7" style={{ margin: '0 auto 10px' }} />
             <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px' }}>Resume / CV File for Auto-Upload</h4>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '14px' }}>
               {profile.resumeFileName ? `Current attached file: ${profile.resumeFileName}` : 'Select a PDF, DOCX, or TXT resume to attach'}
@@ -431,11 +431,11 @@ export const CandidateProfileEditor: React.FC<CandidateProfileEditorProps> = ({ 
                 <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
                   <div style={{ flex: 1, marginRight: '16px' }}>
                     <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff', marginBottom: '2px' }}>{item.questionPattern}</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)' }}>Answer: <strong>{item.answer}</strong></div>
+                    <div style={{ fontSize: '0.8rem', color: '#ffffff' }}>Answer: <strong>{item.answer}</strong></div>
                   </div>
                   <button
                     className="btn btn-secondary"
-                    style={{ padding: '6px 10px', color: 'var(--accent-rose)' }}
+                    style={{ padding: '6px 10px', color: '#a1a1aa' }}
                     onClick={() => handleDeleteLearned(item.id)}
                     title="Delete Answer"
                   >

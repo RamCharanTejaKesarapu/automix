@@ -64,18 +64,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(4, 7, 18, 0.85)',
-      backdropFilter: 'blur(8px)',
+      background: 'rgba(0, 0, 0, 0.88)',
+      backdropFilter: 'blur(10px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1200,
       padding: '20px'
     }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '540px' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '540px', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
         <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Cpu size={20} color="var(--accent-cyan)" />
+            <Cpu size={20} color="#e4e4e7" />
             <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>AI & Automation Settings</h3>
           </div>
           <button className="btn btn-secondary" style={{ padding: '6px' }} onClick={onClose}>
@@ -87,7 +87,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           {/* API Key */}
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '6px' }}>
-              <Key size={14} color="var(--accent-cyan)" />
+              <Key size={14} color="#e4e4e7" />
               <span>AI API KEY (OPENAI / GEMINI)</span>
             </label>
             <input
@@ -133,7 +133,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           {/* Privacy Layer */}
           <div style={{ marginBottom: '22px', padding: '14px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-              <Shield size={16} color="var(--accent-emerald)" />
+              <Shield size={16} color="#ffffff" />
               <strong style={{ fontSize: '0.85rem', color: '#ffffff' }}>Configurable Privacy Layer</strong>
             </div>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '10px' }}>
@@ -151,8 +151,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                     borderRadius: '6px',
                     fontSize: '0.75rem',
                     fontWeight: 600,
-                    background: privacyLevel === lvl ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255, 255, 255, 0.03)',
-                    border: privacyLevel === lvl ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+                    background: privacyLevel === lvl ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+                    border: privacyLevel === lvl ? '1px solid #ffffff' : '1px solid var(--border-subtle)',
                     color: privacyLevel === lvl ? '#ffffff' : 'var(--text-muted)',
                     cursor: 'pointer'
                   }}
@@ -164,7 +164,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px' }}>
-            {saved && <span style={{ color: 'var(--accent-emerald)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}><Check size={14} /> Saved!</span>}
+            {saved && <span style={{ color: '#ffffff', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}><Check size={14} /> Saved!</span>}
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               Cancel
             </button>
