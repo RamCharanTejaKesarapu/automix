@@ -20,6 +20,7 @@ import { ActivityLogTerminal } from './components/ActivityLogTerminal';
 import { HumanInTheLoopModal } from './components/HumanInTheLoopModal';
 import { SettingsModal } from './components/SettingsModal';
 import { LayoutDashboard, UserCheck, Database, Sliders } from 'lucide-react';
+import './App.css';
 
 export const App: React.FC = () => {
   const [appState, setAppState] = useState<ApplicationState>('IDLE');
@@ -215,7 +216,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '24px' }}>
+    <div className="app-container fade-in">
       {/* Top Header */}
       <Header
         state={appState}
@@ -230,7 +231,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Navigation Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px' }}>
+      <div className="nav-tab-list">
         <button
           className={`nav-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
           onClick={() => setActiveTab('dashboard')}
