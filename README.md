@@ -72,6 +72,7 @@ flowchart TB
 - **Human-in-the-Loop (HITL) Gatekeeper**: Pauses automation and alerts you whenever it encounters CAPTCHAs, two-factor authentication, low-confidence questions, or requests final approval before form submission.
 - **Learned Answers Memory Bank**: Persists user responses in SQLite so recurring questions across different applications are answered automatically in the future.
 - **Live Visual Screencast & Action Stream**: Real-time Playwright browser viewport screencast and color-coded event stream broadcast directly to the dashboard over WebSockets.
+- **Obsidian Black & Grey Design System**: Premium, distraction-free monochrome interface engineered with deep obsidian charcoal panels, silver status indicators, and subtle glassmorphic elevations.
 - **Local & Private**: Zero external telemetry. All candidate data, history, credentials, and logs remain securely stored in your local SQLite database.
 
 ---
@@ -83,7 +84,7 @@ flowchart TB
 | **Backend** | Node.js, Express 5, TypeScript 5.9, WebSocket (`ws`), Better-SQLite3, Zod |
 | **Automation** | Playwright (Chromium), Stealth emulation, Pop-up dismissal, Cookie persistence |
 | **AI / LLM** | OpenAI API standard, Google Gemini (via OpenAI compatibility layer) |
-| **Frontend** | React 18, Vite 6, TypeScript, Lucide Icons, Custom Glassmorphic Dark UI |
+| **Frontend** | React 18, Vite 6, TypeScript, Lucide Icons, Obsidian Black & Grey Glassmorphic UI |
 | **Database** | SQLite with WAL (Write-Ahead Logging) mode enabled for high-performance concurrency |
 
 ---
@@ -202,6 +203,14 @@ npm run build
 
 # Start production server
 npm start
+```
+
+### Automated Testing
+
+Run the automated unit test suite verifying job pre-filtering, seniority exclusion, and field mapping:
+
+```bash
+npm test
 ```
 
 ---
