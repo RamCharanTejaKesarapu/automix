@@ -49,13 +49,13 @@ export class JobMatcher {
     const titleLower = jobTitle.toLowerCase();
     const targetLower = this.targetRole.toLowerCase();
 
-    // If searching for intern/entry level, filter out senior/staff roles
     const isSearchingEntryLevel = targetLower.includes('intern') || targetLower.includes('entry') || targetLower.includes('junior');
-    if (isSearchingEntryLevel) {
-      for (const excluded of this.excludeKeywords) {
-        // Only exclude if target role didn't explicitly include it
-        if (!targetLower.includes(excluded) && new RegExp(`\\b${excluded}\\b`, 'i').test(titleLower)) {
-          return { mismatch: true, reason: `Excluded seniority level: "${excluded}"` };
+
+    for (const excluded of this.excludeKeywords) {
+      if (!targetLower.includes(excluded) && new RegExp(`\\b${excluded}\\b`, 'i').test(titleLower)) {
+        const isStandardSeniorityKeyword = ['senior', 'lead', 'staff', 'principal', 'director', 'vp', 'head of'].includes(excluded);
+        if (!isStandardSeniorityKeyword || isSearchingEntryLevel) {
+          return { mismatch: true, reason: `Excluded keyword: "${excluded}"` };
         }
       }
     }
