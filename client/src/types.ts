@@ -93,3 +93,53 @@ export interface LearnedAnswer {
   category?: string;
   createdAt: string;
 }
+
+export interface LLMSettings {
+  baseUrl: string;
+  model: string;
+  apiKeyMasked?: string;
+}
+
+export interface CandidateProfile {
+  personal: {
+    fullName: string;
+    email: string;
+    phone: string;
+    location: string;
+    linkedIn?: string;
+    github?: string;
+    portfolio?: string;
+    authorizedToWork: boolean;
+    requiresSponsorship: boolean;
+  };
+  education: Array<{
+    institution: string;
+    degree: string;
+    fieldOfStudy: string;
+    graduationYear: string;
+    gpa?: string;
+  }>;
+  workExperience: Array<{
+    company: string;
+    role: string;
+    startDate: string;
+    endDate: string;
+    description: string;
+  }>;
+  internships: Array<{
+    company: string;
+    role: string;
+    description: string;
+  }>;
+  skills: string[];
+  projects: Array<{
+    title: string;
+    technologies: string | string[];
+    description: string;
+  }>;
+  resumeFileName?: string;
+  resumePath?: string;
+  resumeText?: string;
+  coverLetter?: string;
+}
+
