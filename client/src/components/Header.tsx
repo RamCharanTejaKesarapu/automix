@@ -7,6 +7,7 @@ interface HeaderProps {
   isRunning: boolean;
   isPaused: boolean;
   autoSubmit: boolean;
+  connectionStatus?: 'connected' | 'connecting' | 'disconnected';
   onStart: () => void;
   onPause: () => void;
   onResume: () => void;
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   isRunning,
   isPaused,
   autoSubmit,
+  connectionStatus = 'connected',
   onStart,
   onPause,
   onResume,
@@ -57,9 +59,27 @@ export const Header: React.FC<HeaderProps> = ({
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em', background: 'linear-gradient(90deg, #ffffff 0%, #a1a1aa 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              AutoMix
+               AutoMix
             </h1>
             <span className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>AI JOB AGENT</span>
+            {connectionStatus === 'connected' && (
+              <span className="badge badge-emerald" style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
+                <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981', marginRight: '4px' }}></span>
+                ONLINE
+              </span>
+            )}
+            {connectionStatus === 'connecting' && (
+              <span className="badge badge-amber" style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
+                <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#f59e0b', marginRight: '4px' }}></span>
+                CONNECTING
+              </span>
+            )}
+            {connectionStatus === 'disconnected' && (
+              <span className="badge badge-rose" style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
+                <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#ef4444', marginRight: '4px' }}></span>
+                RECONNECTING
+              </span>
+            )}
           </div>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Autonomous Job Application & Browser Intelligence Engine</p>
         </div>

@@ -41,6 +41,7 @@ export const App: React.FC = () => {
   const [applications, setApplications] = useState<ApplicationRecord[]>([]);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'applications'>('dashboard');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('connecting');
 
   // Session Input Parameters
   const [sessionConfig, setSessionConfig] = useState<SessionConfig>({
@@ -57,11 +58,13 @@ export const App: React.FC = () => {
 
   const wsRef = useRef<WebSocket | null>(null);
 
-  // Establish WebSocket connection with auto-reconnect
+  // Establish WebSocket connection with exponential backoff auto-reconnect
   useEffect(() => {
     let reconnectTimeout: any;
+    let reconnectAttempts = 0;
 
     const connectWS = () => {
+      setConnectionStatus('connecting');
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const wsUrl = `${protocol}//${window.location.host}/ws`;
       const socket = new WebSocket(wsUrl);
@@ -69,6 +72,8 @@ export const App: React.FC = () => {
 
       socket.onopen = () => {
         console.log('[App] WebSocket connected');
+        setConnectionStatus('connected');
+        reconnectAttempts = 0;
       };
 
       socket.onmessage = (event) => {
@@ -134,8 +139,11 @@ export const App: React.FC = () => {
       };
 
       socket.onclose = () => {
-        console.log('[App] WebSocket closed, retrying in 2s...');
-        reconnectTimeout = setTimeout(connectWS, 2000);
+        setConnectionStatus('disconnected');
+        const delay = Math.min(1000 * Math.pow(1.5, reconnectAttempts), 12000);
+        console.log(`[App] WebSocket closed, retrying in ${Math.round(delay / 1000)}s...`);
+        reconnectAttempts++;
+        reconnectTimeout = setTimeout(connectWS, delay);
       };
     };
 
@@ -223,6 +231,7 @@ export const App: React.FC = () => {
         isRunning={isRunning}
         isPaused={isPaused}
         autoSubmit={sessionConfig.autoSubmit}
+        connectionStatus={connectionStatus}
         onStart={handleStart}
         onPause={handlePause}
         onResume={handleResume}
