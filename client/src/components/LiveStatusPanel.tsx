@@ -30,20 +30,20 @@ export const LiveStatusPanel: React.FC<LiveStatusPanelProps> = ({
 }) => {
   // Determine automation status label & color
   let automationStatus = 'IDLE';
-  let statusColor = '#64748b';
+  let statusColor = '#71717a';
 
   if (state === 'WAITING_FOR_USER') {
     automationStatus = 'WAITING FOR USER';
-    statusColor = '#f59e0b';
+    statusColor = '#d4d4d8';
   } else if (isPaused || state === 'PAUSED') {
     automationStatus = 'PAUSED';
-    statusColor = '#eab308';
+    statusColor = '#a1a1aa';
   } else if (isRunning) {
     automationStatus = 'RUNNING';
-    statusColor = '#10b981';
+    statusColor = '#ffffff';
   } else if (state === 'ERROR') {
     automationStatus = 'ERROR';
-    statusColor = '#f43f5e';
+    statusColor = '#71717a';
   }
 
   // Derive current action text
@@ -66,10 +66,10 @@ export const LiveStatusPanel: React.FC<LiveStatusPanelProps> = ({
         justifyContent: 'space-between',
         padding: '14px 20px',
         borderBottom: '1px solid var(--border-subtle)',
-        background: 'rgba(7, 10, 18, 0.7)'
+        background: 'rgba(12, 12, 15, 0.75)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Compass size={16} color="var(--accent-cyan)" />
+          <Compass size={16} color="var(--accent-silver, #e4e4e7)" />
           <span style={{
             fontSize: '0.82rem',
             fontWeight: 700,
@@ -159,7 +159,7 @@ export const LiveStatusPanel: React.FC<LiveStatusPanelProps> = ({
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
             <span style={{ color: 'var(--text-dim)', minWidth: '115px', fontWeight: 600 }}>Action:</span>
             <span style={{
-              color: 'var(--accent-amber)',
+              color: '#e4e4e7',
               fontWeight: 600,
               display: 'flex',
               alignItems: 'center',
@@ -171,7 +171,7 @@ export const LiveStatusPanel: React.FC<LiveStatusPanelProps> = ({
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
             <span style={{ color: 'var(--text-dim)', minWidth: '115px', fontWeight: 600 }}>Applications:</span>
-            <span style={{ color: 'var(--accent-emerald)', fontWeight: 700 }}>
+            <span style={{ color: '#ffffff', fontWeight: 700 }}>
               {stats.applicationsSubmitted} submitted
             </span>
           </div>
@@ -179,12 +179,12 @@ export const LiveStatusPanel: React.FC<LiveStatusPanelProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ color: 'var(--text-dim)', fontWeight: 600 }}>Skipped:</span>
-              <span style={{ color: '#c084fc', fontWeight: 700 }}>{stats.skipped ?? 0}</span>
+              <span style={{ color: '#a1a1aa', fontWeight: 700 }}>{stats.skipped ?? 0}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ color: 'var(--text-dim)', fontWeight: 600 }}>Waiting for user:</span>
               <span style={{
-                color: stats.waitingForUser > 0 ? '#fbbf24' : 'var(--text-muted)',
+                color: stats.waitingForUser > 0 ? '#ffffff' : 'var(--text-muted)',
                 fontWeight: 700
               }}>
                 {stats.waitingForUser}
@@ -198,7 +198,7 @@ export const LiveStatusPanel: React.FC<LiveStatusPanelProps> = ({
       <div style={{
         padding: '14px 20px',
         borderTop: '1px solid var(--border-subtle)',
-        background: 'rgba(5, 8, 16, 0.75)',
+        background: 'rgba(10, 10, 13, 0.8)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
