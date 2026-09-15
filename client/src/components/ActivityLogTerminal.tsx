@@ -19,31 +19,31 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
   const renderLogPrefix = (log: ActivityLog) => {
     const action = log.action.trim();
     if (action.startsWith('✓')) {
-      return <span style={{ color: '#10b981', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✓</span>;
+      return <span style={{ color: '#ffffff', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✓</span>;
     }
     if (action.startsWith('→')) {
-      return <span style={{ color: '#06b6d4', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>→</span>;
+      return <span style={{ color: '#e4e4e7', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>→</span>;
     }
 
     switch (log.level) {
       case 'SUCCESS':
-        return <span style={{ color: '#10b981', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✓</span>;
+        return <span style={{ color: '#ffffff', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✓</span>;
       case 'WARN':
-        return <span style={{ color: '#fbbf24', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>⚠</span>;
+        return <span style={{ color: '#d4d4d8', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>⚠</span>;
       case 'ERROR':
-        return <span style={{ color: '#fb7185', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✕</span>;
+        return <span style={{ color: '#a1a1aa', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>✕</span>;
       default:
-        return <span style={{ color: '#06b6d4', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>→</span>;
+        return <span style={{ color: '#e4e4e7', fontWeight: 800, marginRight: '8px', fontSize: '0.95rem' }}>→</span>;
     }
   };
 
   const getLogColor = (log: ActivityLog) => {
     const action = log.action.trim();
-    if (action.startsWith('✓') || log.level === 'SUCCESS') return '#34d399';
-    if (log.level === 'WARN') return '#fbbf24';
-    if (log.level === 'ERROR') return '#fb7185';
-    if (action.startsWith('→')) return '#38bdf8';
-    return '#e2e8f0';
+    if (action.startsWith('✓') || log.level === 'SUCCESS') return '#ffffff';
+    if (log.level === 'WARN') return '#d4d4d8';
+    if (log.level === 'ERROR') return '#a1a1aa';
+    if (action.startsWith('→')) return '#e4e4e7';
+    return '#d4d4d8';
   };
 
   const cleanActionText = (action: string) => {
@@ -58,10 +58,10 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
         justifyContent: 'space-between',
         padding: '12px 20px',
         borderBottom: '1px solid var(--border-subtle)',
-        background: 'rgba(7, 10, 18, 0.7)'
+        background: 'rgba(12, 12, 15, 0.75)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Terminal size={15} color="var(--accent-cyan)" />
+          <Terminal size={15} color="#e4e4e7" />
           <span style={{
             fontSize: '0.82rem',
             fontWeight: 700,
@@ -78,7 +78,7 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
           style={{
             background: 'transparent',
             border: 'none',
-            color: autoScroll ? 'var(--accent-cyan)' : 'var(--text-dim)',
+            color: autoScroll ? '#ffffff' : 'var(--text-dim)',
             fontSize: '0.72rem',
             cursor: 'pointer',
             display: 'flex',
@@ -132,7 +132,7 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
 
               <div style={{ flex: 1 }}>
                 {(log.job_title || log.company) && (
-                  <span style={{ color: 'var(--accent-cyan)', marginRight: '6px', fontWeight: 600 }}>
+                  <span style={{ color: '#ffffff', marginRight: '6px', fontWeight: 600 }}>
                     [{log.company || 'Job'}]
                   </span>
                 )}
@@ -140,12 +140,12 @@ export const ActivityLogTerminal: React.FC<ActivityLogTerminalProps> = ({ logs }
                   {cleanActionText(log.action)}
                 </span>
                 {log.result && (
-                  <span style={{ color: 'var(--accent-emerald)', marginLeft: '6px' }}>
+                  <span style={{ color: '#e4e4e7', marginLeft: '6px' }}>
                     — {log.result}
                   </span>
                 )}
                 {log.error && (
-                  <span style={{ color: 'var(--accent-rose)', marginLeft: '6px' }}>
+                  <span style={{ color: '#a1a1aa', marginLeft: '6px' }}>
                     (Error: {log.error})
                   </span>
                 )}
