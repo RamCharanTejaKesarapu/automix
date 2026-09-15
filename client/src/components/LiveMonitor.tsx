@@ -12,23 +12,23 @@ interface LiveMonitorProps {
 }
 
 const STATE_LABEL: Partial<Record<ApplicationState, { text: string; color: string; icon: React.ReactNode }>> = {
-  IDLE:                   { text: 'Idle',                  color: '#64748b',  icon: <Activity size={13} /> },
-  DISCOVERING:            { text: 'Discovering Jobs',       color: '#06b6d4',  icon: <Loader size={13} className="spin" /> },
-  JOB_FOUND:              { text: 'Job Found',              color: '#10b981',  icon: <CheckCircle size={13} /> },
-  MATCH_VALIDATION:       { text: 'Evaluating Match',       color: '#8b5cf6',  icon: <Loader size={13} className="spin" /> },
-  OPENING_APPLICATION:    { text: 'Opening Application',    color: '#3b82f6',  icon: <Loader size={13} className="spin" /> },
-  FILLING_FIELDS:         { text: 'Filling Form Fields',    color: '#06b6d4',  icon: <Zap size={13} /> },
-  GENERATING_GPT_RESPONSE:{ text: 'AI Generating Answer',   color: '#a855f7',  icon: <Loader size={13} className="spin" /> },
-  VALIDATING_APPLICATION: { text: 'Validating Form',        color: '#f59e0b',  icon: <CheckCircle size={13} /> },
-  READY_TO_SUBMIT:        { text: 'Ready to Submit',        color: '#10b981',  icon: <TrendingUp size={13} /> },
-  SUBMITTING:             { text: 'Submitting…',            color: '#10b981',  icon: <Loader size={13} className="spin" /> },
-  SUBMITTED:              { text: 'Submitted ✓',            color: '#10b981',  icon: <CheckCircle size={13} /> },
-  WAITING_FOR_USER:       { text: 'Awaiting Your Input',    color: '#f59e0b',  icon: <AlertTriangle size={13} /> },
-  PAUSED:                 { text: 'Paused',                 color: '#f59e0b',  icon: <AlertTriangle size={13} /> },
-  RETURN_TO_SEARCH:       { text: 'Returning to Search',    color: '#8b5cf6',  icon: <Loader size={13} className="spin" /> },
-  NEXT_JOB:               { text: 'Next Job',               color: '#06b6d4',  icon: <Zap size={13} /> },
-  ERROR:                  { text: 'Error',                  color: '#f43f5e',  icon: <AlertTriangle size={13} /> },
-  STOPPED:                { text: 'Stopped',                color: '#64748b',  icon: <Activity size={13} /> },
+  IDLE:                   { text: 'Idle',                  color: '#71717a',  icon: <Activity size={13} /> },
+  DISCOVERING:            { text: 'Discovering Jobs',       color: '#e4e4e7',  icon: <Loader size={13} className="spin" /> },
+  JOB_FOUND:              { text: 'Job Found',              color: '#ffffff',  icon: <CheckCircle size={13} /> },
+  MATCH_VALIDATION:       { text: 'Evaluating Match',       color: '#d4d4d8',  icon: <Loader size={13} className="spin" /> },
+  OPENING_APPLICATION:    { text: 'Opening Application',    color: '#e4e4e7',  icon: <Loader size={13} className="spin" /> },
+  FILLING_FIELDS:         { text: 'Filling Form Fields',    color: '#ffffff',  icon: <Zap size={13} /> },
+  GENERATING_GPT_RESPONSE:{ text: 'AI Generating Answer',   color: '#d4d4d8',  icon: <Loader size={13} className="spin" /> },
+  VALIDATING_APPLICATION: { text: 'Validating Form',        color: '#e4e4e7',  icon: <CheckCircle size={13} /> },
+  READY_TO_SUBMIT:        { text: 'Ready to Submit',        color: '#ffffff',  icon: <TrendingUp size={13} /> },
+  SUBMITTING:             { text: 'Submitting…',            color: '#e4e4e7',  icon: <Loader size={13} className="spin" /> },
+  SUBMITTED:              { text: 'Submitted ✓',            color: '#ffffff',  icon: <CheckCircle size={13} /> },
+  WAITING_FOR_USER:       { text: 'Awaiting Your Input',    color: '#d4d4d8',  icon: <AlertTriangle size={13} /> },
+  PAUSED:                 { text: 'Paused',                 color: '#a1a1aa',  icon: <AlertTriangle size={13} /> },
+  RETURN_TO_SEARCH:       { text: 'Returning to Search',    color: '#a1a1aa',  icon: <Loader size={13} className="spin" /> },
+  NEXT_JOB:               { text: 'Next Job',               color: '#e4e4e7',  icon: <Zap size={13} /> },
+  ERROR:                  { text: 'Error',                  color: '#a1a1aa',  icon: <AlertTriangle size={13} /> },
+  STOPPED:                { text: 'Stopped',                color: '#71717a',  icon: <Activity size={13} /> },
 };
 
 export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screenshotBase64 }) => {
@@ -83,8 +83,8 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screen
           flexDirection: 'column',
           overflow: 'hidden',
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          borderColor: isActive ? 'rgba(6, 182, 212, 0.35)' : undefined,
-          boxShadow: isActive ? '0 0 30px rgba(6, 182, 212, 0.12), var(--shadow-card)' : undefined,
+          borderColor: isActive ? 'rgba(255, 255, 255, 0.22)' : undefined,
+          boxShadow: isActive ? '0 0 30px rgba(255, 255, 255, 0.06), var(--shadow-card)' : undefined,
         }}
       >
         {/* Header Row */}
@@ -92,15 +92,15 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screen
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '14px 18px',
           borderBottom: '1px solid var(--border-subtle)',
-          background: 'rgba(7, 10, 18, 0.6)'
+          background: 'rgba(12, 12, 15, 0.75)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               {/* Live indicator dot */}
               <div style={{
                 width: 9, height: 9, borderRadius: '50%',
-                background: isLive ? '#10b981' : (isActive ? '#f59e0b' : '#64748b'),
-                boxShadow: isLive ? '0 0 10px #10b981' : 'none',
+                background: isLive ? '#ffffff' : (isActive ? '#d4d4d8' : '#52525b'),
+                boxShadow: isLive ? '0 0 10px rgba(255, 255, 255, 0.9)' : 'none',
                 transition: 'background 0.3s ease, box-shadow 0.3s ease'
               }} />
               <span style={{
@@ -149,7 +149,7 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screen
         {/* Browser Viewport */}
         <div style={{
           position: 'relative',
-          background: '#04060e',
+          background: '#070709',
           minHeight: isFullscreen ? 'calc(100vh - 280px)' : '560px',
           flex: 1,
           overflow: 'hidden',
@@ -183,12 +183,12 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screen
             <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-dim)' }}>
               <div style={{
                 width: 64, height: 64, borderRadius: '50%',
-                background: 'rgba(6, 182, 212, 0.06)',
-                border: '1px solid rgba(6, 182, 212, 0.15)',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 16px'
               }}>
-                <Eye size={28} color="rgba(6, 182, 212, 0.4)" />
+                <Eye size={28} color="rgba(255, 255, 255, 0.5)" />
               </div>
               <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '6px' }}>
                 Browser Preview Offline
@@ -200,9 +200,9 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screen
                 {['20+ FPS via CDP', 'Real cursor movements', 'Live click ripples', 'Action status badges'].map(f => (
                   <span key={f} style={{
                     padding: '4px 10px', borderRadius: '99px',
-                    background: 'rgba(6, 182, 212, 0.06)',
-                    border: '1px solid rgba(6, 182, 212, 0.15)',
-                    fontSize: '0.72rem', color: 'rgba(6, 182, 212, 0.7)'
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    fontSize: '0.72rem', color: '#a1a1aa'
                   }}>{f}</span>
                 ))}
               </div>
@@ -276,7 +276,7 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screen
               <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
                 <div style={{
                   width: `${percent}%`, height: '100%',
-                  background: 'linear-gradient(90deg, #06b6d4, #10b981)',
+                  background: 'linear-gradient(90deg, #52525b 0%, #ffffff 100%)',
                   borderRadius: '3px', transition: 'width 0.4s ease'
                 }} />
               </div>
@@ -287,9 +287,9 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ state, context, screen
           {context?.currentFieldName && (
             <div style={{
               marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px',
-              padding: '8px 12px', background: 'rgba(6, 182, 212, 0.07)',
-              borderRadius: '8px', border: '1px solid rgba(6, 182, 212, 0.2)',
-              fontSize: '0.8rem', color: 'var(--accent-cyan)'
+              padding: '8px 12px', background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.15)',
+              fontSize: '0.8rem', color: '#f4f4f5'
             }}>
               <Clock size={13} />
               Processing field: <strong>{context.currentFieldName}</strong>
