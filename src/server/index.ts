@@ -16,6 +16,13 @@ import { globalAutomationController } from '../controller/automationController.j
 import { globalBrowserManager } from '../browser/browserManager.js';
 import { getLLMConfig, saveLLMConfig } from '../ai/openai/client.js';
 
+import {
+  SessionStartSchema,
+  CandidateProfileSchema,
+  HitlResponseSchema,
+  LLMConfigSchema
+} from './validation.js';
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -28,7 +35,7 @@ const wss = new WebSocketServer({ server });
 const PORT = parseInt(process.env.PORT || '4000', 10);
 
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '5mb' }));
 
 // Setup file uploads directory
 const uploadsDir = path.resolve(__dirname, '../../uploads');
@@ -36,15 +43,41 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+const ALLOWED_MIME_TYPES = new Set([
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain',
+  'text/markdown'
+]);
+
+const ALLOWED_EXTENSIONS = new Set(['.pdf', '.doc', '.docx', '.txt', '.md']);
+
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadsDir),
   filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname);
+    const ext = path.extname(file.originalname).toLowerCase();
     const base = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9]/g, '_');
     cb(null, `${base}_${Date.now()}${ext}`);
   }
 });
-const upload = multer({ storage });
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5 MB ceiling
+  },
+  fileFilter: (_req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const mime = file.mimetype.toLowerCase();
+
+    if (ALLOWED_MIME_TYPES.has(mime) || ALLOWED_EXTENSIONS.has(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only PDF, Word (.doc, .docx), and plain text files up to 5MB are permitted.'));
+    }
+  }
+});
 
 // Broadcast helper to all connected WS clients
 function broadcast(type: string, data: any) {
@@ -96,7 +129,15 @@ app.get('/api/profile', (_req, res) => {
 });
 
 app.post('/api/profile', (req, res) => {
-  candidateProfileRepository.saveProfile(req.body);
+  const parseResult = CandidateProfileSchema.safeParse(req.body);
+  if (!parseResult.success) {
+    return res.status(400).json({
+      error: 'Invalid profile data',
+      details: parseResult.error.issues.map(e => `${e.path.join('.')}: ${e.message}`)
+    });
+  }
+
+  candidateProfileRepository.saveProfile(parseResult.data as any);
   res.json({ success: true, profile: candidateProfileRepository.getProfile() });
 });
 
@@ -125,18 +166,16 @@ app.delete('/api/learned-answers/:id', (req, res) => {
 
 // Session Controls
 app.post('/api/session/start', async (req, res) => {
+  const parseResult = SessionStartSchema.safeParse(req.body);
+  if (!parseResult.success) {
+    return res.status(400).json({
+      error: 'Invalid session configuration',
+      details: parseResult.error.issues.map(e => `${e.path.join('.')}: ${e.message}`)
+    });
+  }
+
   try {
-    const config = {
-      websiteUrl: req.body.websiteUrl || 'https://remoteok.com/remote-engineer-jobs',
-      targetField: req.body.targetField || 'Data Science',
-      targetRole: req.body.targetRole || 'Data Science Intern',
-      targetLocation: req.body.targetLocation,
-      keywords: req.body.keywords,
-      maxApplications: req.body.maxApplications || 25,
-      autoSubmit: req.body.autoSubmit ?? false,
-      matchThreshold: req.body.matchThreshold ?? 65,
-      headless: req.body.headless ?? false
-    };
+    const config = parseResult.data;
 
     // Run automation in background
     globalAutomationController.start(config).catch(err => {
@@ -170,7 +209,15 @@ app.get('/api/hitl/prompt', (_req, res) => {
 });
 
 app.post('/api/hitl/respond', (req, res) => {
-  const { promptId, answer, savePermanently } = req.body;
+  const parseResult = HitlResponseSchema.safeParse(req.body);
+  if (!parseResult.success) {
+    return res.status(400).json({
+      error: 'Invalid HITL payload',
+      details: parseResult.error.issues.map(e => `${e.path.join('.')}: ${e.message}`)
+    });
+  }
+
+  const { promptId, answer, savePermanently } = parseResult.data;
   const success = globalApprovalManager.resolvePrompt({ promptId, answer, savePermanently });
   if (success) {
     res.json({ success: true });
@@ -191,32 +238,46 @@ app.get('/api/settings/llm', (_req, res) => {
 });
 
 app.post('/api/settings/llm', (req, res) => {
-  saveLLMConfig(req.body);
+  const parseResult = LLMConfigSchema.safeParse(req.body);
+  if (!parseResult.success) {
+    return res.status(400).json({
+      error: 'Invalid LLM configuration',
+      details: parseResult.error.issues.map(e => `${e.path.join('.')}: ${e.message}`)
+    });
+  }
+
+  saveLLMConfig(parseResult.data);
   res.json({ success: true, config: getLLMConfig() });
 });
 
-// Resume File Upload
-app.post('/api/upload/resume', upload.single('resume'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
-  }
+// Resume File Upload with Multer error handling
+app.post('/api/upload/resume', (req, res) => {
+  upload.single('resume')(req, res, (err: any) => {
+    if (err) {
+      return res.status(400).json({ error: err.message || 'File upload failed' });
+    }
 
-  const profile = candidateProfileRepository.getProfile();
-  profile.resumePath = req.file.path;
-  profile.resumeFileName = req.file.originalname;
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
 
-  // Try extracting plain text if text/markdown
-  if (req.file.mimetype.includes('text') || req.file.originalname.endsWith('.txt') || req.file.originalname.endsWith('.md')) {
-    try {
-      profile.resumeText = fs.readFileSync(req.file.path, 'utf-8');
-    } catch {}
-  }
+    const profile = candidateProfileRepository.getProfile();
+    profile.resumePath = req.file.path;
+    profile.resumeFileName = req.file.originalname;
 
-  candidateProfileRepository.saveProfile(profile);
-  res.json({
-    success: true,
-    fileName: req.file.originalname,
-    filePath: req.file.path
+    // Try extracting plain text if text/markdown
+    if (req.file.mimetype.includes('text') || req.file.originalname.endsWith('.txt') || req.file.originalname.endsWith('.md')) {
+      try {
+        profile.resumeText = fs.readFileSync(req.file.path, 'utf-8');
+      } catch {}
+    }
+
+    candidateProfileRepository.saveProfile(profile);
+    res.json({
+      success: true,
+      fileName: req.file.originalname,
+      filePath: req.file.path
+    });
   });
 });
 
@@ -232,9 +293,18 @@ if (fs.existsSync(clientDist)) {
   });
 }
 
-// WebSocket Connection handler
-wss.on('connection', (ws) => {
-  console.log('[WebSocket] Client connected');
+// Extended WebSocket with Heartbeat KeepAlive tracking
+interface HeartbeatWebSocket extends WebSocket {
+  isAlive?: boolean;
+}
+
+wss.on('connection', (ws: HeartbeatWebSocket) => {
+  ws.isAlive = true;
+
+  ws.on('pong', () => {
+    ws.isAlive = true;
+  });
+
   // Send current state
   ws.send(JSON.stringify({
     type: 'INIT_STATE',
@@ -248,10 +318,27 @@ wss.on('connection', (ws) => {
     try {
       const parsed = JSON.parse(message.toString());
       if (parsed.type === 'PING') {
+        ws.isAlive = true;
         ws.send(JSON.stringify({ type: 'PONG' }));
       }
     } catch {}
   });
+});
+
+// WebSocket Heartbeat Sweep: Terminate dead connections every 30s
+const wsHeartbeatInterval = setInterval(() => {
+  wss.clients.forEach((client) => {
+    const ws = client as HeartbeatWebSocket;
+    if (ws.isAlive === false) {
+      return client.terminate();
+    }
+    ws.isAlive = false;
+    client.ping();
+  });
+}, 30000);
+
+wss.on('close', () => {
+  clearInterval(wsHeartbeatInterval);
 });
 
 server.listen(PORT, () => {
