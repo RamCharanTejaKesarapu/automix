@@ -1,0 +1,52 @@
+name: "🐛 Bug Report"
+description: File a bug report to help us improve AutoMix
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the sections below to help us reproduce and resolve the issue quickly.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: When running an automation session on Greenhouse job links, the form detector misses...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the issue.
+      placeholder: |
+        1. Open Dashboard at http://localhost:4000
+        2. Set Target Role to 'Data Scientist'
+        3. Enter URL '...'
+        4. Click 'Start Mission'
+        5. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen instead?
+      placeholder: The field mapper should identify the work authorization dropdown and select 'Citizen'.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Node.js version, browser version
+      placeholder: macOS Sequoia 15.0 / Node v20.12.0 / Chromium
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Please copy and paste any relevant terminal or browser console logs here.
+      render: shell

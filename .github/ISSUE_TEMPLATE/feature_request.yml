@@ -1,0 +1,43 @@
+name: "✨ Feature Request"
+description: Propose a new feature, platform integration, or improvement for AutoMix
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make AutoMix faster, stealthier, or smarter? Tell us about it!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem or limitation?
+      placeholder: Currently, AutoMix only supports single-page ATS forms and handles Workday with limited field detection...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see implemented.
+      placeholder: Add dedicated Workday job portal multi-step pagination parser and account creation handler...
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: What part of AutoMix does this feature touch?
+      options:
+        - "ATS Support (Lever, Greenhouse, Workday, Ashby, Taleo)"
+        - "AI Reasoning & Answer Synthesis"
+        - "Anti-Bot Stealth & Browser Fingerprinting"
+        - "User Experience & Obsidian Dashboard"
+        - "Data Storage & Privacy Layer"
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions Considered
+      description: Any alternative ideas or solutions you've evaluated.
